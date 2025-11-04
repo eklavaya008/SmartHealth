@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: 255 255 255;
+  --color-fg: 17 24 39;
+}
+
+html, body, #__next {
+  height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 110% -10%, rgba(59,130,246,0.18), transparent 60%),
+    radial-gradient(900px 500px at -10% 20%, rgba(244,63,94,0.14), transparent 60%),
+    radial-gradient(700px 400px at 50% 120%, rgba(16,185,129,0.16), transparent 60%),
+    linear-gradient(135deg, rgba(99,102,241,0.10), rgba(20,184,166,0.10) 50%, rgba(244,63,94,0.10)),
+    rgb(var(--color-bg));
+  color: rgb(var(--color-fg));
+}
+
+.container-responsive {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.card {
+  @apply bg-white/90 backdrop-blur border rounded-xl shadow-sm;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.88));
+}
+
+.section-title {
+  @apply text-2xl sm:text-3xl font-semibold tracking-tight;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 text-white px-5 py-2.5 rounded-md shadow-sm;
+  background-image: linear-gradient(135deg, #2563eb, #7c3aed);
+}
+.btn-primary:hover { filter: brightness(1.05); }
+.btn-primary:disabled { @apply opacity-60; }
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md border bg-white hover:bg-gray-50;
+  border-image: linear-gradient(135deg, #22c55e, #f43f5e) 1;
+}
+
+.table-header {
+  background-image: linear-gradient(180deg, rgba(59,130,246,0.10), rgba(236,72,153,0.10));
+}
