@@ -36,7 +36,7 @@ A full-stack web application that helps patients book medical appointments with 
 ├── scripts/
 │   └── seedDoctors.js      # Database seeding script
 ├── package.json
-└── .env                    # Environment variables (not committed)
+└── .env.example            # Environment variable template (copy to .env)
 ```
 
 ## Prerequisites
@@ -61,13 +61,13 @@ npm install
 
 ### 3. Configure environment variables
 
-Create a `.env` file in the project root:
+Copy the example file and fill in your own values:
 
-```env
-MONGODB_URI=mongodb://localhost:27017/healthcare-app
-JWT_SECRET=your-secret-key-here
-PORT=3000
+```bash
+cp .env.example .env
 ```
+
+Then edit `.env` with your local or Atlas MongoDB URI and a strong JWT secret. **Never commit `.env` to version control.**
 
 | Variable      | Description                                      |
 | ------------- | ------------------------------------------------ |
@@ -134,20 +134,9 @@ The app will be available at **http://localhost:3000**.
 | ------ | -------------- | ------------------ |
 | GET    | `/api/health`  | Server health check|
 
-## Demo Doctor Credentials
+## Demo Doctor Login
 
-After running `npm run seed`, you can log in with any seeded doctor account:
-
-| Email                         | Password   | Specialty          |
-| ----------------------------- | ---------- | ------------------ |
-| sarah.johnson@hospital.com    | doctor123  | Cardiology         |
-| michael.chen@hospital.com     | doctor123  | Pulmonology        |
-| emily.rodriguez@hospital.com  | doctor123  | Gastroenterology   |
-| james.wilson@hospital.com     | doctor123  | Neurology          |
-| lisa.anderson@hospital.com    | doctor123  | Dermatology        |
-| robert.taylor@hospital.com    | doctor123  | General Medicine   |
-| jennifer.martinez@hospital.com| doctor123  | Rheumatology       |
-| david.brown@hospital.com      | doctor123  | Orthopedics        |
+After running `npm run seed`, use any seeded doctor email from `scripts/seedDoctors.js` with the default seed password shown in that script's console output.
 
 ## How It Works
 
