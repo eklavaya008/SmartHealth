@@ -11,7 +11,23 @@ const notFoundHandler = (req, res, next) => {
   next(new ApiError(404, `Route not found: ${req.method} ${req.originalUrl}`));
 };
 
-const errorHandler = (err, req, res, next) => {
+const normalize = (err) => {
+  if (err.name === 'CastError') return new ApiError(400, `Invalid ${err.path}: ${err.value}`);
+  if (err.name === 'ValidationError') {
+    const message = Object.values(err.errors)
+      .map((e) => e.message)
+      .join(', ');
+    return new ApiError(400, message);
+  }
+  if (err.code === 11000) {
+    const field = Object.keys(err.keyValue || {})[0] || 'field';
+    return new ApiError(409, `An account with this ${field} already exists`);
+  }
+  return err;
+};
+
+const errorHandler = (rawErr, req, res, next) => {
+  const err = normalize(rawErr);
   const statusCode = err.statusCode && err.statusCode >= 400 ? err.statusCode : 500;
 
   if (statusCode === 500) {

@@ -9,7 +9,11 @@ const path = require('path');
 const { NODE_ENV, PORT, CLIENT_URL } = require('./config/env');
 const connectDB = require('./config/db');
 const { notFoundHandler, errorHandler } = require('./middleware/errorHandler');
+const authenticate = require('./middleware/authenticate');
+const authorize = require('./middleware/authorize');
 const authRoutes = require('./routes/auth');
+const doctorRoutes = require('./routes/doctors');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 
@@ -35,8 +39,10 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/doctors', doctorRoutes);
+app.use('/api/admin', authenticate, authorize('admin'), adminRoutes);
 
-// Remaining feature routes are mounted here phase by phase (doctors, appointments, admin, predict).
+// Remaining feature routes are mounted here phase by phase (appointments, predict).
 
 const clientDist = path.join(__dirname, '../client/dist');
 if (NODE_ENV === 'production') {
