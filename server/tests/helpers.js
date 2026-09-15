@@ -1,9 +1,12 @@
 process.env.NODE_ENV = 'test';
 require('dotenv').config({ quiet: true });
 
-// Run tests against a dedicated database so they never touch real data.
-const baseUri = (process.env.MONGODB_URI || '').replace(/\/$/, '');
-process.env.MONGODB_URI = `${baseUri}/smarthealth_test`;
+// Run tests against a dedicated database so they never touch real data. Replaces whatever
+// database name (or none) is already in MONGODB_URI, regardless of format, so this works
+// whether the base URI ends in "/", "/smarthealth", or "/smarthealth?retryWrites=...".
+const [pathPart, queryPart] = (process.env.MONGODB_URI || '').split('?');
+const withoutDbName = pathPart.replace(/\/[^/]*$/, '');
+process.env.MONGODB_URI = `${withoutDbName}/smarthealth_test${queryPart ? `?${queryPart}` : ''}`;
 
 const http = require('http');
 const mongoose = require('mongoose');
