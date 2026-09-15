@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import { UserCog, CalendarClock, Plus, Trash2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { updateMyProfile, updateMyAvailability } from '../api/doctors';
 import { SPECIALTIES, WEEKDAYS } from '../constants';
+import TextField from '../components/ui/TextField';
+import Button from '../components/ui/Button';
 
 export default function DoctorProfile() {
   const { user, refresh } = useAuth();
@@ -61,32 +64,38 @@ export default function DoctorProfile() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
-      <h1 className="text-2xl font-bold text-slate-800">Profile & Availability</h1>
+      <h1 className="font-display text-2xl font-bold text-slate-900">Profile & Availability</h1>
 
-      <form onSubmit={saveProfile} className="mt-6 grid gap-4 rounded-xl border border-slate-200 bg-white p-5 sm:grid-cols-2">
-        <h2 className="text-lg font-semibold text-slate-800 sm:col-span-2">Profile</h2>
-        <input value={form.name} onChange={set('name')} placeholder="Name" className="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
-        <select value={form.specialty} onChange={set('specialty')} className="rounded-lg border border-slate-300 px-3 py-2 text-sm">
+      <form onSubmit={saveProfile} className="mt-6 grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:grid-cols-2">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-800 sm:col-span-2">
+          <UserCog className="h-5 w-5 text-brand-600" /> Profile
+        </h2>
+        <TextField value={form.name} onChange={set('name')} placeholder="Name" />
+        <TextField as="select" value={form.specialty} onChange={set('specialty')}>
           {SPECIALTIES.map((s) => (
             <option key={s}>{s}</option>
           ))}
-        </select>
-        <input value={form.qualifications} onChange={set('qualifications')} placeholder="Qualifications" className="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
-        <input type="number" min="0" value={form.experience} onChange={set('experience')} placeholder="Experience (years)" className="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
-        <input value={form.hospital} onChange={set('hospital')} placeholder="Hospital" className="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
-        <input value={form.phone} onChange={set('phone')} placeholder="Phone" className="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
-        <textarea value={form.bio} onChange={set('bio')} placeholder="Bio" rows={3} className="rounded-lg border border-slate-300 px-3 py-2 text-sm sm:col-span-2" />
+        </TextField>
+        <TextField value={form.qualifications} onChange={set('qualifications')} placeholder="Qualifications" />
+        <TextField type="number" min="0" value={form.experience} onChange={set('experience')} placeholder="Experience (years)" />
+        <TextField value={form.hospital} onChange={set('hospital')} placeholder="Hospital" />
+        <TextField value={form.phone} onChange={set('phone')} placeholder="Phone" />
+        <div className="sm:col-span-2">
+          <TextField as="textarea" value={form.bio} onChange={set('bio')} placeholder="Bio" rows={3} />
+        </div>
         {profileMsg && <p className="text-sm text-slate-600 sm:col-span-2">{profileMsg}</p>}
-        <button type="submit" disabled={savingProfile} className="rounded-lg bg-brand-600 py-2.5 font-medium text-white hover:bg-brand-700 disabled:opacity-60 sm:col-span-2">
+        <Button type="submit" disabled={savingProfile} className="w-full sm:col-span-2">
           {savingProfile ? 'Saving...' : 'Save profile'}
-        </button>
+        </Button>
       </form>
 
-      <form onSubmit={saveAvailability} className="mt-6 rounded-xl border border-slate-200 bg-white p-5">
-        <h2 className="text-lg font-semibold text-slate-800">Weekly Availability</h2>
+      <form onSubmit={saveAvailability} className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-800">
+          <CalendarClock className="h-5 w-5 text-brand-600" /> Weekly Availability
+        </h2>
         <div className="mt-3 space-y-2">
           {availability.map((rule, i) => (
-            <div key={i} className="flex flex-wrap items-center gap-2">
+            <div key={i} className="flex flex-wrap items-center gap-2 rounded-lg bg-slate-50 p-2">
               <select
                 value={rule.dayOfWeek}
                 onChange={(e) => updateRule(i, 'dayOfWeek', e.target.value)}
@@ -121,19 +130,27 @@ export default function DoctorProfile() {
                 title="Slot length (minutes)"
               />
               <span className="text-xs text-slate-400">min slots</span>
-              <button type="button" onClick={() => removeRule(i)} className="ml-auto text-sm text-red-600 hover:underline">
-                Remove
+              <button
+                type="button"
+                onClick={() => removeRule(i)}
+                className="ml-auto flex items-center gap-1 text-sm text-red-600 hover:underline"
+              >
+                <Trash2 className="h-3.5 w-3.5" /> Remove
               </button>
             </div>
           ))}
         </div>
-        <button type="button" onClick={addRule} className="mt-3 text-sm font-medium text-brand-700 hover:underline">
-          + Add availability window
+        <button
+          type="button"
+          onClick={addRule}
+          className="mt-3 flex items-center gap-1 text-sm font-medium text-brand-700 hover:underline"
+        >
+          <Plus className="h-4 w-4" /> Add availability window
         </button>
         {availMsg && <p className="mt-3 text-sm text-slate-600">{availMsg}</p>}
-        <button type="submit" disabled={savingAvail} className="mt-4 w-full rounded-lg bg-brand-600 py-2.5 font-medium text-white hover:bg-brand-700 disabled:opacity-60">
+        <Button type="submit" disabled={savingAvail} className="mt-4 w-full">
           {savingAvail ? 'Saving...' : 'Save availability'}
-        </button>
+        </Button>
       </form>
     </div>
   );

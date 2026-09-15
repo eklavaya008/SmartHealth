@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
+import { Sparkles } from 'lucide-react';
 import { predictSymptoms } from '../api/predict';
+import { specialtyIcon } from '../specialtyIcons';
 
 const CONFIDENCE_COLOR = (pct) => {
   if (pct >= 65) return 'bg-brand-600';
@@ -47,9 +49,9 @@ export default function PredictionPanel({ symptoms, selectedSpecialty, onSelectS
   if (!symptoms || symptoms.trim().length < 3) return null;
 
   return (
-    <div className="mt-3 rounded-xl border border-brand-100 bg-brand-50/60 p-4">
+    <div className="mt-3 rounded-xl border border-brand-100 bg-gradient-to-br from-brand-50 to-accent-50/40 p-4">
       <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-brand-800">
-        <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-brand-500" />
+        <Sparkles className="h-4 w-4 text-brand-600" />
         Symptom Insight
         {loading && <span className="text-xs font-normal text-brand-600">analyzing...</span>}
       </div>
@@ -58,6 +60,7 @@ export default function PredictionPanel({ symptoms, selectedSpecialty, onSelectS
         <div className="space-y-2">
           {results.map((r, i) => {
             const active = selectedSpecialty === r.specialty;
+            const Icon = specialtyIcon(r.specialty);
             return (
               <button
                 type="button"
@@ -68,12 +71,17 @@ export default function PredictionPanel({ symptoms, selectedSpecialty, onSelectS
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <div>
-                    <p className="text-sm font-medium text-slate-800">
-                      {i === 0 && <span className="mr-1.5 rounded bg-brand-600 px-1.5 py-0.5 text-[10px] font-bold uppercase text-white">Top match</span>}
-                      {r.disease}
-                    </p>
-                    <p className="text-xs text-slate-500">Suggested specialty: {r.specialty}</p>
+                  <div className="flex items-start gap-2.5">
+                    <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-700">
+                      <Icon className="h-3.5 w-3.5" />
+                    </span>
+                    <div>
+                      <p className="text-sm font-medium text-slate-800">
+                        {i === 0 && <span className="mr-1.5 rounded bg-brand-600 px-1.5 py-0.5 text-[10px] font-bold uppercase text-white">Top match</span>}
+                        {r.disease}
+                      </p>
+                      <p className="text-xs text-slate-500">Suggested specialty: {r.specialty}</p>
+                    </div>
                   </div>
                   <span className="shrink-0 text-sm font-semibold text-slate-700">{r.confidence}%</span>
                 </div>

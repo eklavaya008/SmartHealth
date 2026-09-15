@@ -1,21 +1,31 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Settings, ClipboardList, Users, Hourglass, CalendarCheck, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getMyDoctorAppointments, updateAppointmentStatus } from '../api/appointments';
 import StatusBadge from '../components/StatusBadge';
+import Button from '../components/ui/Button';
 
 const NEXT_ACTIONS = {
   pending: [
-    { to: 'confirmed', label: 'Confirm', style: 'bg-brand-600 text-white hover:bg-brand-700' },
-    { to: 'cancelled', label: 'Decline', style: 'border border-red-300 text-red-600 hover:bg-red-50' },
+    { to: 'confirmed', label: 'Confirm', variant: 'primary' },
+    { to: 'cancelled', label: 'Decline', variant: 'danger' },
   ],
   confirmed: [
-    { to: 'completed', label: 'Mark completed', style: 'bg-brand-600 text-white hover:bg-brand-700' },
-    { to: 'cancelled', label: 'Cancel', style: 'border border-red-300 text-red-600 hover:bg-red-50' },
+    { to: 'completed', label: 'Mark completed', variant: 'primary' },
+    { to: 'cancelled', label: 'Cancel', variant: 'danger' },
   ],
   completed: [],
   cancelled: [],
 };
+
+const STAT_CARDS = [
+  { key: 'total', label: 'Total', icon: Users, style: 'bg-slate-100 text-slate-700' },
+  { key: 'pending', label: 'Pending', icon: Hourglass, style: 'bg-amber-100 text-amber-700' },
+  { key: 'confirmed', label: 'Confirmed', icon: CalendarCheck, style: 'bg-blue-100 text-blue-700' },
+  { key: 'completed', label: 'Completed', icon: CheckCircle2, style: 'bg-emerald-100 text-emerald-700' },
+];
 
 export default function DoctorDashboard() {
   const { user } = useAuth();
@@ -49,43 +59,61 @@ export default function DoctorDashboard() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-800">Doctor Dashboard</h1>
-        <Link to="/doctor/profile" className="text-sm font-medium text-brand-700 hover:underline">
-          Edit profile & availability
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="font-display text-2xl font-bold text-slate-900">Doctor Dashboard</h1>
+          <p className="text-sm text-slate-500">Manage your incoming appointments.</p>
+        </div>
+        <Link to="/doctor/profile">
+          <Button variant="outline">
+            <Settings className="h-4 w-4" /> Profile & availability
+          </Button>
         </Link>
       </div>
 
       {user?.status === 'pending' && (
-        <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
-          Your profile is pending admin approval. You'll be listed publicly and start receiving bookings once approved.
+        <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+          Your profile is pending admin approval. You'll be listed publicly and start receiving bookings once
+          approved.
         </div>
       )}
       {user?.status === 'rejected' && (
-        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+        <div className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
           Your application was not approved. Reason: {user.rejectionReason || 'Not specified.'}
         </div>
       )}
 
       <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {['total', 'pending', 'confirmed', 'completed'].map((key) => (
-          <div key={key} className="rounded-xl border border-slate-200 bg-white p-4 text-center">
-            <p className="text-2xl font-bold text-slate-800">{counts[key] || 0}</p>
-            <p className="text-xs capitalize text-slate-500">{key}</p>
-          </div>
+        {STAT_CARDS.map(({ key, label, icon: Icon, style }, i) => (
+          <motion.div
+            key={key}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.05 }}
+            className="rounded-xl border border-slate-200 bg-white p-4 text-center shadow-sm"
+          >
+            <span className={`mx-auto flex h-9 w-9 items-center justify-center rounded-full ${style}`}>
+              <Icon className="h-4.5 w-4.5" />
+            </span>
+            <p className="mt-2 text-2xl font-bold text-slate-800">{counts[key] || 0}</p>
+            <p className="text-xs text-slate-500">{label}</p>
+          </motion.div>
         ))}
       </div>
 
       {loading && <p className="text-slate-500">Loading...</p>}
       {!loading && appointments.length === 0 && (
-        <p className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-slate-500">
-          No appointments yet.
-        </p>
+        <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
+          <ClipboardList className="mx-auto h-9 w-9 text-slate-300" />
+          <p className="mt-3 text-slate-500">No appointments yet.</p>
+        </div>
       )}
 
       <div className="space-y-3">
         {appointments.map((a) => (
-          <div key={a._id} className="rounded-xl border border-slate-200 bg-white p-4">
+          <div key={a._id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md">
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
                 <p className="font-semibold text-slate-800">{a.patientId?.name || 'Patient'}</p>
@@ -109,14 +137,15 @@ export default function DoctorDashboard() {
             {NEXT_ACTIONS[a.status].length > 0 && (
               <div className="mt-3 flex gap-2">
                 {NEXT_ACTIONS[a.status].map((action) => (
-                  <button
+                  <Button
                     key={action.to}
+                    variant={action.variant}
                     onClick={() => handleTransition(a._id, action.to)}
                     disabled={busyId === a._id}
-                    className={`rounded-lg px-3 py-1.5 text-sm disabled:opacity-60 ${action.style}`}
+                    className="px-3 py-1.5 text-xs"
                   >
                     {action.label}
-                  </button>
+                  </Button>
                 ))}
               </div>
             )}

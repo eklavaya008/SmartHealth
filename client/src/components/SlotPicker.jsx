@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+import { CalendarDays, Clock3 } from 'lucide-react';
 import { getSlots } from '../api/appointments';
+import TextField from './ui/TextField';
 
 export default function SlotPicker({ doctorId, date, onDateChange, selectedSlot, onSelectSlot }) {
   const [slots, setSlots] = useState([]);
@@ -23,7 +25,8 @@ export default function SlotPicker({ doctorId, date, onDateChange, selectedSlot,
   return (
     <div>
       <label className="mb-1 block text-sm font-medium text-slate-700">Appointment date</label>
-      <input
+      <TextField
+        icon={CalendarDays}
         type="date"
         min={today}
         max={maxDate}
@@ -32,12 +35,13 @@ export default function SlotPicker({ doctorId, date, onDateChange, selectedSlot,
           onDateChange(e.target.value);
           onSelectSlot('');
         }}
-        className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
       />
 
       {date && (
-        <div className="mt-3">
-          <p className="mb-2 text-sm font-medium text-slate-700">Available times</p>
+        <div className="mt-4">
+          <p className="mb-2 flex items-center gap-1.5 text-sm font-medium text-slate-700">
+            <Clock3 className="h-4 w-4 text-slate-400" /> Available times
+          </p>
           {loading && <p className="text-sm text-slate-500">Loading slots...</p>}
           {!loading && slots.length === 0 && (
             <p className="text-sm text-slate-500">No open slots on this date. Try another day.</p>
@@ -48,10 +52,10 @@ export default function SlotPicker({ doctorId, date, onDateChange, selectedSlot,
                 type="button"
                 key={slot.startTime}
                 onClick={() => onSelectSlot(slot.startTime)}
-                className={`rounded-lg border px-2 py-1.5 text-sm transition ${
+                className={`rounded-lg border px-2 py-1.5 text-sm font-medium transition-all ${
                   selectedSlot === slot.startTime
-                    ? 'border-brand-600 bg-brand-600 text-white'
-                    : 'border-slate-300 text-slate-700 hover:border-brand-400'
+                    ? 'border-brand-600 bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-md shadow-brand-500/20'
+                    : 'border-slate-300 text-slate-700 hover:-translate-y-0.5 hover:border-brand-400 hover:shadow-sm'
                 }`}
               >
                 {slot.startTime}
