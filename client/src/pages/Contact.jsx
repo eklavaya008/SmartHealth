@@ -26,18 +26,18 @@ export default function Contact() {
   return (
     <div>
       <section className="relative overflow-hidden px-4 pb-14 pt-16 sm:px-6 sm:pt-20">
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-brand-50 via-white to-white" />
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-brand-50 via-white to-white dark:from-brand-950/30 dark:via-slate-950 dark:to-slate-950" />
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="mx-auto max-w-2xl text-center"
         >
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-brand-700">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-brand-700 dark:bg-brand-900/40 dark:text-brand-300">
             Get in touch
           </span>
-          <h1 className="mt-4 font-display text-3xl font-bold text-slate-900 sm:text-4xl">We'd love to hear from you</h1>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-slate-600">
+          <h1 className="mt-4 font-display text-3xl font-bold text-slate-900 sm:text-4xl dark:text-white">We'd love to hear from you</h1>
+          <p className="mx-auto mt-4 max-w-xl text-lg text-slate-600 dark:text-slate-400">
             Questions about booking, becoming a partner doctor, or feedback on the platform — reach out anytime.
           </p>
         </motion.div>
@@ -47,13 +47,13 @@ export default function Contact() {
         <div className="grid gap-8 lg:grid-cols-[1fr_1.3fr]">
           <div className="space-y-4">
             {INFO_CARDS.map(({ icon: Icon, title, text }) => (
-              <div key={title} className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-100 to-accent-100 text-brand-700">
+              <div key={title} className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-100 to-accent-100 text-brand-700 dark:from-brand-900/40 dark:to-accent-900/40 dark:text-brand-300">
                   <Icon className="h-5.5 w-5.5" />
                 </span>
                 <div>
-                  <p className="font-display text-sm font-semibold text-slate-800">{title}</p>
-                  <p className="text-sm text-slate-500">{text}</p>
+                  <p className="font-display text-sm font-semibold text-slate-800 dark:text-slate-100">{title}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{text}</p>
                 </div>
               </div>
             ))}
@@ -65,7 +65,7 @@ export default function Contact() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.5 }}
-            className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/50 sm:p-8"
+            className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/50 sm:p-8 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none"
           >
             <div className="grid gap-4 sm:grid-cols-2">
               <TextField required placeholder="Your name" value={form.name} onChange={set('name')} />
@@ -75,7 +75,7 @@ export default function Contact() {
             <Button type="submit" className="w-full">
               Send message <Send className="h-4 w-4" />
             </Button>
-            <p className="text-center text-xs text-slate-400">Opens your email client with this message pre-filled.</p>
+            <p className="text-center text-xs text-slate-400 dark:text-slate-500">Opens your email client with this message pre-filled.</p>
           </motion.form>
         </div>
       </section>

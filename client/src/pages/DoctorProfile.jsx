@@ -64,11 +64,11 @@ export default function DoctorProfile() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
-      <h1 className="font-display text-2xl font-bold text-slate-900">Profile & Availability</h1>
+      <h1 className="font-display text-2xl font-bold text-slate-900 dark:text-white">Profile & Availability</h1>
 
-      <form onSubmit={saveProfile} className="mt-6 grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:grid-cols-2">
-        <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-800 sm:col-span-2">
-          <UserCog className="h-5 w-5 text-brand-600" /> Profile
+      <form onSubmit={saveProfile} className="mt-6 grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:grid-cols-2 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-800 sm:col-span-2 dark:text-slate-100">
+          <UserCog className="h-5 w-5 text-brand-600 dark:text-brand-400" /> Profile
         </h2>
         <TextField value={form.name} onChange={set('name')} placeholder="Name" />
         <TextField as="select" value={form.specialty} onChange={set('specialty')}>
@@ -83,23 +83,23 @@ export default function DoctorProfile() {
         <div className="sm:col-span-2">
           <TextField as="textarea" value={form.bio} onChange={set('bio')} placeholder="Bio" rows={3} />
         </div>
-        {profileMsg && <p className="text-sm text-slate-600 sm:col-span-2">{profileMsg}</p>}
+        {profileMsg && <p className="text-sm text-slate-600 sm:col-span-2 dark:text-slate-400">{profileMsg}</p>}
         <Button type="submit" disabled={savingProfile} className="w-full sm:col-span-2">
           {savingProfile ? 'Saving...' : 'Save profile'}
         </Button>
       </form>
 
-      <form onSubmit={saveAvailability} className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-800">
-          <CalendarClock className="h-5 w-5 text-brand-600" /> Weekly Availability
+      <form onSubmit={saveAvailability} className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-800 dark:text-slate-100">
+          <CalendarClock className="h-5 w-5 text-brand-600 dark:text-brand-400" /> Weekly Availability
         </h2>
         <div className="mt-3 space-y-2">
           {availability.map((rule, i) => (
-            <div key={i} className="flex flex-wrap items-center gap-2 rounded-lg bg-slate-50 p-2">
+            <div key={i} className="flex flex-wrap items-center gap-2 rounded-lg bg-slate-50 p-2 dark:bg-slate-800/60">
               <select
                 value={rule.dayOfWeek}
                 onChange={(e) => updateRule(i, 'dayOfWeek', e.target.value)}
-                className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
               >
                 {WEEKDAYS.map((d) => (
                   <option key={d.value} value={d.value}>
@@ -111,14 +111,14 @@ export default function DoctorProfile() {
                 type="time"
                 value={rule.startTime}
                 onChange={(e) => updateRule(i, 'startTime', e.target.value)}
-                className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
               />
-              <span className="text-slate-400">to</span>
+              <span className="text-slate-400 dark:text-slate-500">to</span>
               <input
                 type="time"
                 value={rule.endTime}
                 onChange={(e) => updateRule(i, 'endTime', e.target.value)}
-                className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
               />
               <input
                 type="number"
@@ -126,14 +126,14 @@ export default function DoctorProfile() {
                 max="240"
                 value={rule.slotMinutes}
                 onChange={(e) => updateRule(i, 'slotMinutes', e.target.value)}
-                className="w-20 rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                className="w-20 rounded-lg border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
                 title="Slot length (minutes)"
               />
-              <span className="text-xs text-slate-400">min slots</span>
+              <span className="text-xs text-slate-400 dark:text-slate-500">min slots</span>
               <button
                 type="button"
                 onClick={() => removeRule(i)}
-                className="ml-auto flex items-center gap-1 text-sm text-red-600 hover:underline"
+                className="ml-auto flex items-center gap-1 text-sm text-red-600 hover:underline dark:text-red-400"
               >
                 <Trash2 className="h-3.5 w-3.5" /> Remove
               </button>
@@ -143,11 +143,11 @@ export default function DoctorProfile() {
         <button
           type="button"
           onClick={addRule}
-          className="mt-3 flex items-center gap-1 text-sm font-medium text-brand-700 hover:underline"
+          className="mt-3 flex items-center gap-1 text-sm font-medium text-brand-700 hover:underline dark:text-brand-400"
         >
           <Plus className="h-4 w-4" /> Add availability window
         </button>
-        {availMsg && <p className="mt-3 text-sm text-slate-600">{availMsg}</p>}
+        {availMsg && <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">{availMsg}</p>}
         <Button type="submit" disabled={savingAvail} className="mt-4 w-full">
           {savingAvail ? 'Saving...' : 'Save availability'}
         </Button>

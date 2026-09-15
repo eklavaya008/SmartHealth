@@ -54,25 +54,29 @@ export default function GetStartedMenu() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 z-50 mt-2 w-[21rem] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-900/10"
+            className="absolute right-0 z-50 mt-2 w-[21rem] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-900/10 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/40"
           >
             {GROUPS.map(({ key, icon: Icon, title, text, login, signup }) => (
-              <div key={key} className="flex items-center gap-3 border-b border-slate-100 p-4 last:border-b-0">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-100 to-accent-100 text-brand-700">
+              <div key={key} className="flex items-center gap-3 border-b border-slate-100 p-4 last:border-b-0 dark:border-slate-800">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-100 to-accent-100 text-brand-700 dark:from-brand-900/40 dark:to-accent-900/40 dark:text-brand-300">
                   <Icon className="h-5 w-5" />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="font-display text-sm font-semibold text-slate-800">{title}</p>
-                  <p className="truncate text-xs text-slate-500">{text}</p>
+                  <p className="font-display text-sm font-semibold text-slate-800 dark:text-slate-100">{title}</p>
+                  <p className="truncate text-xs text-slate-500 dark:text-slate-400">{text}</p>
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-1 text-xs">
-                  <Link to={login} onClick={() => setOpen(false)} className="font-semibold text-brand-700 hover:text-brand-800">
+                  <Link
+                    to={login}
+                    onClick={() => setOpen(false)}
+                    className="font-semibold text-brand-700 hover:text-brand-800 dark:text-brand-400 dark:hover:text-brand-300"
+                  >
                     Log in
                   </Link>
                   <Link
                     to={signup}
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-0.5 text-slate-500 hover:text-slate-700"
+                    className="flex items-center gap-0.5 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
                   >
                     Sign up <ArrowRight className="h-3 w-3" />
                   </Link>

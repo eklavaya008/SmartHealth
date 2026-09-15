@@ -19,7 +19,7 @@ import NotFound from './pages/NotFound';
 
 export default function App() {
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
       <ScrollToHash />
       <Navbar />
       <main className="flex-1">

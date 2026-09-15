@@ -21,10 +21,10 @@ const NEXT_ACTIONS = {
 };
 
 const STAT_CARDS = [
-  { key: 'total', label: 'Total', icon: Users, style: 'bg-slate-100 text-slate-700' },
-  { key: 'pending', label: 'Pending', icon: Hourglass, style: 'bg-amber-100 text-amber-700' },
-  { key: 'confirmed', label: 'Confirmed', icon: CalendarCheck, style: 'bg-blue-100 text-blue-700' },
-  { key: 'completed', label: 'Completed', icon: CheckCircle2, style: 'bg-emerald-100 text-emerald-700' },
+  { key: 'total', label: 'Total', icon: Users, style: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300' },
+  { key: 'pending', label: 'Pending', icon: Hourglass, style: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' },
+  { key: 'confirmed', label: 'Confirmed', icon: CalendarCheck, style: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' },
+  { key: 'completed', label: 'Completed', icon: CheckCircle2, style: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' },
 ];
 
 export default function DoctorDashboard() {
@@ -61,8 +61,8 @@ export default function DoctorDashboard() {
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl font-bold text-slate-900">Doctor Dashboard</h1>
-          <p className="text-sm text-slate-500">Manage your incoming appointments.</p>
+          <h1 className="font-display text-2xl font-bold text-slate-900 dark:text-white">Doctor Dashboard</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Manage your incoming appointments.</p>
         </div>
         <Link to="/doctor/profile">
           <Button variant="outline">
@@ -72,14 +72,14 @@ export default function DoctorDashboard() {
       </div>
 
       {user?.status === 'pending' && (
-        <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+        <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-400">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
           Your profile is pending admin approval. You'll be listed publicly and start receiving bookings once
           approved.
         </div>
       )}
       {user?.status === 'rejected' && (
-        <div className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+        <div className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
           Your application was not approved. Reason: {user.rejectionReason || 'Not specified.'}
         </div>
@@ -92,32 +92,35 @@ export default function DoctorDashboard() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="rounded-xl border border-slate-200 bg-white p-4 text-center shadow-sm"
+            className="rounded-xl border border-slate-200 bg-white p-4 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:shadow-none"
           >
             <span className={`mx-auto flex h-9 w-9 items-center justify-center rounded-full ${style}`}>
               <Icon className="h-4.5 w-4.5" />
             </span>
-            <p className="mt-2 text-2xl font-bold text-slate-800">{counts[key] || 0}</p>
-            <p className="text-xs text-slate-500">{label}</p>
+            <p className="mt-2 text-2xl font-bold text-slate-800 dark:text-slate-100">{counts[key] || 0}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">{label}</p>
           </motion.div>
         ))}
       </div>
 
-      {loading && <p className="text-slate-500">Loading...</p>}
+      {loading && <p className="text-slate-500 dark:text-slate-400">Loading...</p>}
       {!loading && appointments.length === 0 && (
-        <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
-          <ClipboardList className="mx-auto h-9 w-9 text-slate-300" />
-          <p className="mt-3 text-slate-500">No appointments yet.</p>
+        <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center dark:border-slate-700 dark:bg-slate-900">
+          <ClipboardList className="mx-auto h-9 w-9 text-slate-300 dark:text-slate-600" />
+          <p className="mt-3 text-slate-500 dark:text-slate-400">No appointments yet.</p>
         </div>
       )}
 
       <div className="space-y-3">
         {appointments.map((a) => (
-          <div key={a._id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md">
+          <div
+            key={a._id}
+            className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:shadow-none"
+          >
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
-                <p className="font-semibold text-slate-800">{a.patientId?.name || 'Patient'}</p>
-                <p className="text-sm text-slate-500">
+                <p className="font-semibold text-slate-800 dark:text-slate-100">{a.patientId?.name || 'Patient'}</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">
                   {a.patientId?.gender}
                   {a.patientId?.dob ? `, DOB ${new Date(a.patientId.dob).toLocaleDateString()}` : ''} &middot;{' '}
                   {a.patientId?.phone}
@@ -125,12 +128,12 @@ export default function DoctorDashboard() {
               </div>
               <StatusBadge status={a.status} />
             </div>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
               {a.date} at {a.startTime}
             </p>
-            <p className="mt-1 text-sm text-slate-500">Symptoms: {a.symptoms}</p>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Symptoms: {a.symptoms}</p>
             {a.predictedDisease && (
-              <p className="mt-1 text-xs text-slate-400">
+              <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
                 Predicted: {a.predictedDisease} ({a.predictionConfidence}% confidence)
               </p>
             )}

@@ -4,12 +4,12 @@ export default function TextField({ icon: Icon, className = '', as = 'input', da
   const Tag = as;
   const palette = dark
     ? 'border-slate-700 bg-slate-900 text-slate-100 placeholder:text-slate-500'
-    : 'border-slate-300 bg-white text-slate-800 placeholder:text-slate-400';
+    : 'border-slate-300 bg-white text-slate-800 placeholder:text-slate-400 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500';
   return (
     <div className="relative">
       {Icon && (
         <Icon
-          className={`pointer-events-none absolute left-3.5 top-3.5 h-4.5 w-4.5 ${dark ? 'text-slate-500' : 'text-slate-400'}`}
+          className={`pointer-events-none absolute left-3.5 top-3.5 h-4.5 w-4.5 ${dark ? 'text-slate-500' : 'text-slate-400 dark:text-slate-500'}`}
         />
       )}
       <Tag

@@ -108,12 +108,12 @@ export default function Home() {
         <motion.div
           initial={{ scale: 0.7, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-100 text-brand-600"
+          className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-100 text-brand-600 dark:bg-brand-900/40 dark:text-brand-400"
         >
           <CheckCircle2 className="h-8 w-8" />
         </motion.div>
-        <h1 className="mt-5 font-display text-2xl font-bold text-slate-900">Appointment requested</h1>
-        <p className="mt-2 text-slate-600">
+        <h1 className="mt-5 font-display text-2xl font-bold text-slate-900 dark:text-white">Appointment requested</h1>
+        <p className="mt-2 text-slate-600 dark:text-slate-400">
           Your booking with {selectedDoctor?.name} on {date} at {startTime} is pending confirmation.
         </p>
         <Link to="/patient/dashboard" className="mt-6">
@@ -128,10 +128,10 @@ export default function Home() {
       {/* Hero */}
       <section className="relative overflow-hidden px-4 pb-16 pt-16 sm:px-6 sm:pb-24 sm:pt-24">
         <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-brand-50 via-white to-white" />
-          <div className="animate-blob absolute -top-24 left-1/4 h-80 w-80 rounded-full bg-brand-200/50 blur-3xl" />
-          <div className="animate-blob animation-delay-2000 absolute -top-10 right-1/4 h-72 w-72 rounded-full bg-accent-200/50 blur-3xl" />
-          <div className="animate-blob animation-delay-4000 absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-brand-100/60 blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-50 via-white to-white dark:from-brand-950/40 dark:via-slate-950 dark:to-slate-950" />
+          <div className="animate-blob absolute -top-24 left-1/4 h-80 w-80 rounded-full bg-brand-200/50 blur-3xl dark:bg-brand-800/20" />
+          <div className="animate-blob animation-delay-2000 absolute -top-10 right-1/4 h-72 w-72 rounded-full bg-accent-200/50 blur-3xl dark:bg-accent-800/20" />
+          <div className="animate-blob animation-delay-4000 absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-brand-100/60 blur-3xl dark:bg-brand-900/20" />
         </div>
 
         <motion.div
@@ -140,17 +140,17 @@ export default function Home() {
           transition={{ duration: 0.5 }}
           className="mx-auto max-w-2xl text-center"
         >
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-brand-700">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-brand-700 dark:bg-brand-900/40 dark:text-brand-300">
             <Sparkles className="h-3.5 w-3.5" />
             Symptom-matched, in real time
           </span>
-          <h1 className="mt-4 font-display text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+          <h1 className="mt-4 font-display text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl dark:text-white">
             Find the right doctor,{' '}
-            <span className="bg-gradient-to-r from-brand-600 via-brand-500 to-accent-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-brand-600 via-brand-500 to-accent-600 bg-clip-text text-transparent dark:from-brand-400 dark:via-brand-300 dark:to-accent-400">
               faster
             </span>
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-slate-600">
+          <p className="mx-auto mt-4 max-w-xl text-lg text-slate-600 dark:text-slate-400">
             Describe your symptoms and get matched with the right specialty, then book a real appointment slot in
             minutes.
           </p>
@@ -168,8 +168,8 @@ export default function Home() {
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             {trustBadges(doctorCount).map(({ icon: Icon, label }) => (
-              <span key={label} className="flex items-center gap-1.5 text-sm font-medium text-slate-500">
-                <Icon className="h-4 w-4 text-brand-600" />
+              <span key={label} className="flex items-center gap-1.5 text-sm font-medium text-slate-500 dark:text-slate-400">
+                <Icon className="h-4 w-4 text-brand-600 dark:text-brand-400" />
                 {label}
               </span>
             ))}
@@ -187,16 +187,16 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.4, delay: i * 0.1 }}
-              className="relative rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+              className="relative rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900"
             >
-              <span className="absolute -top-3 -left-3 flex h-7 w-7 items-center justify-center rounded-full bg-slate-900 font-display text-xs font-bold text-white">
+              <span className="absolute -top-3 -left-3 flex h-7 w-7 items-center justify-center rounded-full bg-slate-900 font-display text-xs font-bold text-white dark:bg-brand-500">
                 {i + 1}
               </span>
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-100 to-accent-100 text-brand-700">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-100 to-accent-100 text-brand-700 dark:from-brand-900/40 dark:to-accent-900/40 dark:text-brand-300">
                 <Icon className="h-5.5 w-5.5" />
               </span>
-              <h3 className="mt-4 font-display text-base font-semibold text-slate-800">{title}</h3>
-              <p className="mt-1.5 text-sm text-slate-600">{text}</p>
+              <h3 className="mt-4 font-display text-base font-semibold text-slate-800 dark:text-slate-100">{title}</h3>
+              <p className="mt-1.5 text-sm text-slate-600 dark:text-slate-400">{text}</p>
             </motion.div>
           ))}
         </div>
@@ -205,8 +205,8 @@ export default function Home() {
       {/* Specialties */}
       <section id="specialties" className="mx-auto max-w-5xl scroll-mt-20 px-4 pb-16 sm:px-6">
         <div className="mb-6 text-center">
-          <h2 className="font-display text-2xl font-bold text-slate-900 sm:text-3xl">Browse by specialty</h2>
-          <p className="mt-1 text-slate-500">Not sure where to start? Jump straight to a specialty.</p>
+          <h2 className="font-display text-2xl font-bold text-slate-900 sm:text-3xl dark:text-white">Browse by specialty</h2>
+          <p className="mt-1 text-slate-500 dark:text-slate-400">Not sure where to start? Jump straight to a specialty.</p>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {SPECIALTIES.map((s, i) => {
@@ -219,12 +219,12 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.3, delay: i * 0.04 }}
-                className="group flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-white p-5 text-center transition-all hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg"
+                className="group flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-white p-5 text-center transition-all hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900 dark:hover:border-brand-600"
               >
-                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-brand-100 to-accent-100 text-brand-700 transition group-hover:scale-110">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-brand-100 to-accent-100 text-brand-700 transition group-hover:scale-110 dark:from-brand-900/40 dark:to-accent-900/40 dark:text-brand-300">
                   <Icon className="h-5.5 w-5.5" />
                 </span>
-                <span className="text-sm font-medium text-slate-700">{s}</span>
+                <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{s}</span>
               </motion.button>
             );
           })}
@@ -234,8 +234,8 @@ export default function Home() {
       {/* Symptom checker / booking widget */}
       <section id="symptom-checker" className="mx-auto max-w-3xl scroll-mt-20 px-4 pb-20 sm:px-6">
         <div className="mb-6 text-center">
-          <h2 className="font-display text-2xl font-bold text-slate-900 sm:text-3xl">Symptom Checker</h2>
-          <p className="mt-1 text-slate-500">Tell us what's going on — we'll suggest a specialty in seconds.</p>
+          <h2 className="font-display text-2xl font-bold text-slate-900 sm:text-3xl dark:text-white">Symptom Checker</h2>
+          <p className="mt-1 text-slate-500 dark:text-slate-400">Tell us what's going on — we'll suggest a specialty in seconds.</p>
         </div>
 
         <motion.div
@@ -243,21 +243,21 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.5 }}
-          className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-200/50 sm:p-8"
+          className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-200/50 sm:p-8 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none"
         >
-          <label className="mb-1 block text-sm font-semibold text-slate-700">Describe your symptoms</label>
+          <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-slate-200">Describe your symptoms</label>
           <textarea
             value={symptoms}
             onChange={(e) => setSymptoms(e.target.value)}
             rows={3}
             placeholder="e.g. I've had a headache and dizziness since yesterday"
-            className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10"
+            className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-800 shadow-sm transition placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
           />
           <PredictionPanel symptoms={symptoms} selectedSpecialty={specialty} onSelectSpecialty={setSpecialty} />
 
           {specialty && (
             <div className="mt-6">
-              <p className="mb-2 text-sm font-medium text-slate-700">
+              <p className="mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">
                 {doctors.length > 0
                   ? `Available ${specialty} doctors`
                   : `No approved ${specialty} doctors yet — try another specialty.`}
@@ -276,7 +276,7 @@ export default function Home() {
           )}
 
           {selectedDoctor && (
-            <div className="mt-6 border-t border-slate-100 pt-6">
+            <div className="mt-6 border-t border-slate-100 pt-6 dark:border-slate-800">
               <SlotPicker
                 doctorId={selectedDoctor._id}
                 date={date}
@@ -287,7 +287,7 @@ export default function Home() {
             </div>
           )}
 
-          {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+          {error && <p className="mt-4 text-sm text-red-600 dark:text-red-400">{error}</p>}
 
           {selectedDoctor && date && startTime && (
             <Button onClick={handleBook} disabled={submitting} className="mt-6 w-full">
@@ -320,7 +320,10 @@ export default function Home() {
               Join SmartHealth and manage your appointments, availability, and patients from one dashboard.
             </p>
             <Link to="/doctor/signup" className="mt-6 inline-block">
-              <Button variant="outline" className="border-white/30 bg-white text-brand-700 hover:bg-white/90">
+              <Button
+                variant="outline"
+                className="border-white/30 bg-white text-brand-700 hover:bg-white/90 dark:border-white/30 dark:bg-white dark:text-brand-700 dark:hover:bg-white/90"
+              >
                 Register your practice <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>

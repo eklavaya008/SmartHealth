@@ -5,7 +5,7 @@ export default function ProtectedRoute({ allow, children }) {
   const { role, loading } = useAuth();
 
   if (loading) {
-    return <div className="flex justify-center py-24 text-slate-500">Loading...</div>;
+    return <div className="flex justify-center py-24 text-slate-500 dark:text-slate-400">Loading...</div>;
   }
 
   if (!role || !allow.includes(role)) {

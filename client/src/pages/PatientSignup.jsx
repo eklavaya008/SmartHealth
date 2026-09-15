@@ -60,7 +60,7 @@ export default function PatientSignup() {
           </TextField>
         </div>
         {error && (
-          <p className="flex items-center gap-1.5 text-sm text-red-600">
+          <p className="flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400">
             <AlertCircle className="h-4 w-4" /> {error}
           </p>
         )}
@@ -68,9 +68,9 @@ export default function PatientSignup() {
           {loading ? 'Creating account...' : 'Sign up'}
         </Button>
       </form>
-      <p className="mt-5 text-sm text-slate-600">
+      <p className="mt-5 text-sm text-slate-600 dark:text-slate-400">
         Already have an account?{' '}
-        <Link to="/patient/login" className="font-semibold text-brand-700 hover:text-brand-800">
+        <Link to="/patient/login" className="font-semibold text-brand-700 hover:text-brand-800 dark:text-brand-400 dark:hover:text-brand-300">
           Log in
         </Link>
       </p>

@@ -24,7 +24,7 @@ export default function SlotPicker({ doctorId, date, onDateChange, selectedSlot,
 
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-slate-700">Appointment date</label>
+      <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Appointment date</label>
       <TextField
         icon={CalendarDays}
         type="date"
@@ -39,12 +39,12 @@ export default function SlotPicker({ doctorId, date, onDateChange, selectedSlot,
 
       {date && (
         <div className="mt-4">
-          <p className="mb-2 flex items-center gap-1.5 text-sm font-medium text-slate-700">
-            <Clock3 className="h-4 w-4 text-slate-400" /> Available times
+          <p className="mb-2 flex items-center gap-1.5 text-sm font-medium text-slate-700 dark:text-slate-300">
+            <Clock3 className="h-4 w-4 text-slate-400 dark:text-slate-500" /> Available times
           </p>
-          {loading && <p className="text-sm text-slate-500">Loading slots...</p>}
+          {loading && <p className="text-sm text-slate-500 dark:text-slate-400">Loading slots...</p>}
           {!loading && slots.length === 0 && (
-            <p className="text-sm text-slate-500">No open slots on this date. Try another day.</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">No open slots on this date. Try another day.</p>
           )}
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
             {slots.map((slot) => (
@@ -55,7 +55,7 @@ export default function SlotPicker({ doctorId, date, onDateChange, selectedSlot,
                 className={`rounded-lg border px-2 py-1.5 text-sm font-medium transition-all ${
                   selectedSlot === slot.startTime
                     ? 'border-brand-600 bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-md shadow-brand-500/20'
-                    : 'border-slate-300 text-slate-700 hover:-translate-y-0.5 hover:border-brand-400 hover:shadow-sm'
+                    : 'border-slate-300 text-slate-700 hover:-translate-y-0.5 hover:border-brand-400 hover:shadow-sm dark:border-slate-700 dark:text-slate-300 dark:hover:border-brand-500'
                 }`}
               >
                 {slot.startTime}

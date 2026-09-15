@@ -3,9 +3,11 @@ import { twMerge } from 'tailwind-merge';
 const VARIANTS = {
   primary:
     'bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-lg shadow-brand-600/20 hover:shadow-xl hover:shadow-brand-600/30 hover:-translate-y-0.5 active:translate-y-0',
-  outline: 'border border-slate-300 bg-white text-slate-700 hover:border-brand-400 hover:bg-brand-50',
-  danger: 'border border-red-200 bg-white text-red-600 hover:bg-red-50',
-  ghost: 'text-slate-600 hover:bg-slate-100',
+  outline:
+    'border border-slate-300 bg-white text-slate-700 hover:border-brand-400 hover:bg-brand-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-brand-500 dark:hover:bg-slate-800',
+  danger:
+    'border border-red-200 bg-white text-red-600 hover:bg-red-50 dark:border-red-900/50 dark:bg-slate-900 dark:text-red-400 dark:hover:bg-red-950/40',
+  ghost: 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800',
   dark: 'bg-gradient-to-r from-slate-800 to-slate-700 text-white shadow-lg shadow-slate-800/20 hover:-translate-y-0.5',
 };
 

@@ -68,8 +68,8 @@ export default function DoctorSignup() {
         >
           <CheckCircle2 className="h-8 w-8" />
         </motion.div>
-        <h1 className="mt-5 font-display text-2xl font-bold text-slate-900">Application submitted</h1>
-        <p className="mt-2 text-slate-600">
+        <h1 className="mt-5 font-display text-2xl font-bold text-slate-900 dark:text-white">Application submitted</h1>
+        <p className="mt-2 text-slate-600 dark:text-slate-400">
           Your profile is pending review by our team. You'll be listed publicly once approved — you can log in
           anytime to check your status.
         </p>
@@ -126,7 +126,7 @@ export default function DoctorSignup() {
           <TextField as="textarea" placeholder="Short bio (optional)" value={form.bio} onChange={set('bio')} rows={3} />
         </div>
         {error && (
-          <p className="flex items-center gap-1.5 text-sm text-red-600 sm:col-span-2">
+          <p className="flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400 sm:col-span-2">
             <AlertCircle className="h-4 w-4" /> {error}
           </p>
         )}
@@ -134,9 +134,9 @@ export default function DoctorSignup() {
           {loading ? 'Submitting...' : 'Submit application'}
         </Button>
       </form>
-      <p className="mt-5 text-sm text-slate-600">
+      <p className="mt-5 text-sm text-slate-600 dark:text-slate-400">
         Already registered?{' '}
-        <Link to="/doctor/login" className="font-semibold text-brand-700 hover:text-brand-800">
+        <Link to="/doctor/login" className="font-semibold text-brand-700 hover:text-brand-800 dark:text-brand-400 dark:hover:text-brand-300">
           Log in
         </Link>
       </p>
