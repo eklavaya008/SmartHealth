@@ -1,0 +1,115 @@
+import { useEffect, useRef, useState } from 'react';
+import { predictSymptoms } from '../api/predict';
+
+const CONFIDENCE_COLOR = (pct) => {
+  if (pct >= 65) return 'bg-brand-600';
+  if (pct >= 40) return 'bg-amber-500';
+  return 'bg-slate-400';
+};
+
+export default function PredictionPanel({ symptoms, selectedSpecialty, onSelectSpecialty }) {
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMatch, setHasMatch] = useState(false);
+  const debounceRef = useRef(null);
+  const autoSelectedRef = useRef(false);
+
+  useEffect(() => {
+    clearTimeout(debounceRef.current);
+
+    if (!symptoms || symptoms.trim().length < 3) {
+      setResults([]);
+      setHasMatch(false);
+      return;
+    }
+
+    debounceRef.current = setTimeout(async () => {
+      setLoading(true);
+      try {
+        const data = await predictSymptoms(symptoms.trim());
+        setResults(data.results);
+        setHasMatch(data.hasMatch);
+        if (data.hasMatch && !autoSelectedRef.current) {
+          onSelectSpecialty(data.results[0].specialty);
+          autoSelectedRef.current = true;
+        }
+      } catch {
+        setResults([]);
+        setHasMatch(false);
+      } finally {
+        setLoading(false);
+      }
+    }, 500);
+
+    return () => clearTimeout(debounceRef.current);
+  }, [symptoms]);
+
+  if (!symptoms || symptoms.trim().length < 3) return null;
+
+  return (
+    <div className="mt-3 rounded-xl border border-brand-100 bg-brand-50/60 p-4">
+      <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-brand-800">
+        <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-brand-500" />
+        Symptom Insight
+        {loading && <span className="text-xs font-normal text-brand-600">analyzing...</span>}
+      </div>
+
+      {!loading && hasMatch && (
+        <div className="space-y-2">
+          {results.map((r, i) => {
+            const active = selectedSpecialty === r.specialty;
+            return (
+              <button
+                type="button"
+                key={r.disease}
+                onClick={() => onSelectSpecialty(r.specialty)}
+                className={`block w-full rounded-lg border p-3 text-left transition ${
+                  active ? 'border-brand-500 bg-white shadow-sm' : 'border-transparent bg-white/60 hover:bg-white'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div>
+                    <p className="text-sm font-medium text-slate-800">
+                      {i === 0 && <span className="mr-1.5 rounded bg-brand-600 px-1.5 py-0.5 text-[10px] font-bold uppercase text-white">Top match</span>}
+                      {r.disease}
+                    </p>
+                    <p className="text-xs text-slate-500">Suggested specialty: {r.specialty}</p>
+                  </div>
+                  <span className="shrink-0 text-sm font-semibold text-slate-700">{r.confidence}%</span>
+                </div>
+
+                <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+                  <div
+                    className={`h-full rounded-full ${CONFIDENCE_COLOR(r.confidence)}`}
+                    style={{ width: `${r.confidence}%` }}
+                  />
+                </div>
+
+                {r.matchedSymptoms.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {r.matchedSymptoms.map((s) => (
+                      <span key={s} className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] text-slate-600">
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {!loading && !hasMatch && (
+        <p className="text-sm text-slate-600">
+          No specific pattern matched yet — try describing symptoms in more detail, or continue with General Medicine.
+        </p>
+      )}
+
+      <p className="mt-3 text-[11px] leading-snug text-slate-500">
+        This is automated, keyword-based guidance to help you pick a specialty — not a medical diagnosis. Always consult
+        the doctor for an accurate assessment.
+      </p>
+    </div>
+  );
+}
