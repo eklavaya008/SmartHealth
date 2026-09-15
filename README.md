@@ -7,12 +7,12 @@ appointments; admins review and approve new doctor accounts before they go live.
 
 ## Tech Stack
 
-| Layer    | Technologies                                             |
-| -------- | --------------------------------------------------------- |
-| Frontend | React (Vite), React Router, Tailwind CSS, Axios           |
-| Backend  | Node.js, Express                                          |
-| Database | MongoDB, Mongoose                                         |
-| Auth     | JWT (httpOnly cookies), bcryptjs                           |
+| Layer    | Technologies                                                              |
+| -------- | -------------------------------------------------------------------------- |
+| Frontend | React (Vite), React Router, Tailwind CSS v4, Framer Motion, Lucide, Axios  |
+| Backend  | Node.js, Express                                                          |
+| Database | MongoDB, Mongoose                                                         |
+| Auth     | JWT (httpOnly cookies), bcryptjs                                          |
 
 ## Features
 
@@ -30,6 +30,53 @@ appointments; admins review and approve new doctor accounts before they go live.
   localStorage), helmet, rate limiting (tighter on auth routes), input validation on every
   route, centralized error handling that never leaks internals, and a fail-fast check that
   refuses to boot without a real `JWT_SECRET`.
+- **Light & dark mode**: follows the OS preference by default, remembers an explicit choice,
+  no flash of the wrong theme on load.
+
+## Screenshots
+
+**Home — symptom checker with live, ranked predictions**
+
+![Home hero](docs/screenshots/01-home-hero.png)
+![Symptom checker with prediction results](docs/screenshots/02-symptom-checker.png)
+
+**Browse by specialty**
+
+![Specialty grid](docs/screenshots/03-specialties-grid.png)
+
+**One "Get Started" menu for both roles**
+
+![Get Started dropdown](docs/screenshots/04-get-started-menu.png)
+
+**Auth — split-screen layout, shared by all five login/signup pages**
+
+![Patient login](docs/screenshots/05-patient-login.png)
+![Doctor registration](docs/screenshots/06-doctor-signup.png)
+
+**Patient dashboard**
+
+![Patient dashboard](docs/screenshots/07-patient-dashboard.png)
+
+**Doctor dashboard — stats + status-driven actions**
+
+![Doctor dashboard](docs/screenshots/08-doctor-dashboard.png)
+
+**Doctor profile & weekly availability editor**
+
+![Doctor profile](docs/screenshots/09-doctor-profile.png)
+
+**Admin — doctor approval queue**
+
+![Admin dashboard](docs/screenshots/10-admin-dashboard.png)
+
+**About & Contact**
+
+![About page](docs/screenshots/11-about.png)
+![Contact page](docs/screenshots/12-contact.png)
+
+**Dark mode**
+
+![Home page in dark mode](docs/screenshots/13-home-dark.png)
 
 ## Project Structure
 
@@ -37,9 +84,10 @@ appointments; admins review and approve new doctor accounts before they go live.
 ├── client/                 # React app (Vite)
 │   └── src/
 │       ├── api/             # axios wrappers per resource
-│       ├── components/      # Navbar, PredictionPanel, DoctorCard, SlotPicker, ...
-│       ├── context/         # AuthContext (session state)
-│       └── pages/           # one file per route
+│       ├── components/      # Navbar, Footer, PredictionPanel, DoctorCard, SlotPicker, ...
+│       │   └── ui/            # shared primitives: Button, TextField
+│       ├── context/          # AuthContext (session), ThemeContext (light/dark)
+│       └── pages/            # one file per route
 ├── server/
 │   ├── app.js               # Express app (middleware + routes), no listen()
 │   ├── server.js            # entry point: connects to DB, starts listening
@@ -53,6 +101,7 @@ appointments; admins review and approve new doctor accounts before they go live.
 │   ├── scripts/                 # seedAdmin.js, seedDoctors.js
 │   ├── tests/                    # node:test integration tests (auth, booking)
 │   └── validators/               # express-validator rule sets per route
+├── docs/screenshots/         # README screenshots
 ├── package.json             # server deps + scripts
 └── .env.example
 ```
@@ -79,13 +128,16 @@ cp .env.example .env
 
 | Variable      | Description                                                        |
 | ------------- | -------------------------------------------------------------------|
-| `MONGODB_URI` | MongoDB connection string                                          |
+| `MONGODB_URI` | MongoDB connection string, **with an explicit database name** (e.g. `.../smarthealth`) — omitting it silently defaults to a database literally named `test` |
 | `JWT_SECRET`  | Secret for signing JWTs — **must be at least 32 characters**       |
 | `PORT`        | API server port (default `3000`)                                   |
 | `NODE_ENV`    | `development` \| `production` \| `test`                            |
 | `CLIENT_URL`  | Origin allowed by CORS (the Vite dev server, default `http://localhost:5173`) |
 
 The server refuses to start if `MONGODB_URI` or a sufficiently long `JWT_SECRET` are missing.
+
+If you're using Atlas: open your cluster and click **Browse Collections** (not "Connect") to
+view data directly in the browser via Atlas's Data Explorer.
 
 ### 3. Seed initial data
 
@@ -120,7 +172,8 @@ Express server will serve the built client directly (see `server/app.js`).
 | `/admin/*`             | Seeded admin account only (`/admin/login`, not linked in the nav) |
 
 New doctor accounts start as `pending` and are invisible in the public doctor list/booking
-flow until an admin approves them from `/admin/dashboard`.
+flow until an admin approves them from `/admin/dashboard`. Both patient and doctor login/signup
+are reachable from the **Get Started** menu in the navbar.
 
 ## API Overview
 
