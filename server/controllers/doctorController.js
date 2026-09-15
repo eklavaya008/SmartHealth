@@ -17,4 +17,28 @@ const getDoctorById = asyncHandler(async (req, res) => {
   res.json(doctor);
 });
 
-module.exports = { listDoctors, getDoctorById };
+const PROFILE_FIELDS = ['name', 'specialty', 'qualifications', 'experience', 'hospital', 'phone', 'bio'];
+
+const updateMyProfile = asyncHandler(async (req, res) => {
+  PROFILE_FIELDS.forEach((field) => {
+    if (req.body[field] !== undefined) req.user[field] = req.body[field];
+  });
+  await req.user.save();
+  res.json(req.user);
+});
+
+const updateMyAvailability = asyncHandler(async (req, res) => {
+  const { availability } = req.body;
+
+  for (const rule of availability) {
+    if (rule.startTime >= rule.endTime) {
+      throw new ApiError(400, `startTime must be before endTime for dayOfWeek ${rule.dayOfWeek}`);
+    }
+  }
+
+  req.user.availability = availability;
+  await req.user.save();
+  res.json(req.user);
+});
+
+module.exports = { listDoctors, getDoctorById, updateMyProfile, updateMyAvailability };
