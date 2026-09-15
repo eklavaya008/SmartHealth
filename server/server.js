@@ -15,6 +15,7 @@ const authRoutes = require('./routes/auth');
 const doctorRoutes = require('./routes/doctors');
 const adminRoutes = require('./routes/admin');
 const predictRoutes = require('./routes/predict');
+const appointmentRoutes = require('./routes/appointments');
 
 const app = express();
 
@@ -43,8 +44,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/doctors', doctorRoutes);
 app.use('/api/admin', authenticate, authorize('admin'), adminRoutes);
 app.use('/api/predict', predictRoutes);
-
-// Remaining feature routes are mounted here phase by phase (appointments).
+app.use('/api/appointments', appointmentRoutes);
 
 const clientDist = path.join(__dirname, '../client/dist');
 if (NODE_ENV === 'production') {
