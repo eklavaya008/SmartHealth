@@ -1,49 +1,21 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
-const Doctor = require('../models/Doctor');
+const authController = require('../controllers/authController');
+const authenticate = require('../middleware/authenticate');
+const { authLimiter } = require('../middleware/rateLimiters');
+const validate = require('../validators/validate');
+const { loginRules, patientSignupRules, doctorSignupRules } = require('../validators/authValidators');
+
 const router = express.Router();
 
-// POST /api/auth/login
-router.post('/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
+router.post('/patient/signup', authLimiter, patientSignupRules, validate, authController.patientSignup);
+router.post('/patient/login', authLimiter, loginRules, validate, authController.patientLogin);
 
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Please provide email and password' });
-    }
+router.post('/doctor/signup', authLimiter, doctorSignupRules, validate, authController.doctorSignup);
+router.post('/doctor/login', authLimiter, loginRules, validate, authController.doctorLogin);
 
-    const doctor = await Doctor.findOne({ email: email.toLowerCase() });
-    
-    if (!doctor) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
+router.post('/admin/login', authLimiter, loginRules, validate, authController.adminLogin);
 
-    const isMatch = await doctor.comparePassword(password);
-    
-    if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    const token = jwt.sign(
-      { id: doctor._id, email: doctor.email },
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '7d' }
-    );
-
-    res.json({
-      token,
-      doctor: {
-        id: doctor._id,
-        name: doctor.name,
-        email: doctor.email,
-        specialty: doctor.specialty
-      }
-    });
-  } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ message: 'Server error during login' });
-  }
-});
+router.get('/me', authenticate, authController.me);
+router.post('/logout', authController.logout);
 
 module.exports = router;
-

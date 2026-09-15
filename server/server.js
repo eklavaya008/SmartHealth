@@ -1,66 +1,54 @@
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
-require('dotenv').config();
-const connectDB = require('./lib/db');
 
-// Import routes
+const { NODE_ENV, PORT, CLIENT_URL } = require('./config/env');
+const connectDB = require('./config/db');
+const { notFoundHandler, errorHandler } = require('./middleware/errorHandler');
 const authRoutes = require('./routes/auth');
-const doctorRoutes = require('./routes/doctors');
-const appointmentRoutes = require('./routes/appointments');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Connect to MongoDB
 connectDB();
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.set('trust proxy', 1);
 
-// Serve static files from public directory
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(helmet());
+app.use(cors({ origin: CLIENT_URL, credentials: true }));
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+app.use(cookieParser());
 
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/doctors', doctorRoutes);
-app.use('/api/appointments', appointmentRoutes);
+if (NODE_ENV !== 'test') {
+  app.use(morgan(NODE_ENV === 'development' ? 'dev' : 'combined'));
+}
 
-// Health check endpoint
+const generalLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 300, standardHeaders: true, legacyHeaders: false });
+app.use('/api', generalLimiter);
+
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Server is running' });
+  res.json({ status: 'OK', message: 'Server is running', env: NODE_ENV });
 });
 
-// Serve HTML pages
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
-});
+app.use('/api/auth', authRoutes);
 
-app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/login.html'));
-});
+// Remaining feature routes are mounted here phase by phase (doctors, appointments, admin, predict).
 
-app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/dashboard.html'));
-});
+const clientDist = path.join(__dirname, '../client/dist');
+if (NODE_ENV === 'production') {
+  app.use(express.static(clientDist));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
+  });
+}
 
-app.get('/about', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/about.html'));
-});
-
-app.get('/contact', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/contact.html'));
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!', error: err.message });
-});
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT} [${NODE_ENV}]`);
 });
-
