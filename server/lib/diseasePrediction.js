@@ -1,111 +1,118 @@
-// Disease prediction logic based on symptoms
-const diseaseMap = {
-  // Cardiac symptoms
-  'chest pain': { disease: 'Cardiac Issue', specialty: 'Cardiology' },
-  'chest discomfort': { disease: 'Cardiac Issue', specialty: 'Cardiology' },
-  'heart palpitations': { disease: 'Cardiac Issue', specialty: 'Cardiology' },
-  'shortness of breath': { disease: 'Cardiac Issue', specialty: 'Cardiology' },
-  'heartburn': { disease: 'Cardiac Issue', specialty: 'Cardiology' },
-  'chest tightness': { disease: 'Cardiac Issue', specialty: 'Cardiology' },
-  
-  // Respiratory symptoms
-  'cough': { disease: 'Respiratory Infection', specialty: 'Pulmonology' },
-  'fever': { disease: 'Respiratory Infection', specialty: 'Pulmonology' },
-  'sore throat': { disease: 'Respiratory Infection', specialty: 'Pulmonology' },
-  'runny nose': { disease: 'Common Cold', specialty: 'Pulmonology' },
-  'congestion': { disease: 'Common Cold', specialty: 'Pulmonology' },
-  'wheezing': { disease: 'Asthma', specialty: 'Pulmonology' },
-  'difficulty breathing': { disease: 'Respiratory Issue', specialty: 'Pulmonology' },
-  
-  // Gastrointestinal symptoms
-  'stomach pain': { disease: 'Gastrointestinal Issue', specialty: 'Gastroenterology' },
-  'abdominal pain': { disease: 'Gastrointestinal Issue', specialty: 'Gastroenterology' },
-  'nausea': { disease: 'Gastrointestinal Issue', specialty: 'Gastroenterology' },
-  'vomiting': { disease: 'Gastrointestinal Issue', specialty: 'Gastroenterology' },
-  'diarrhea': { disease: 'Gastrointestinal Issue', specialty: 'Gastroenterology' },
-  'constipation': { disease: 'Gastrointestinal Issue', specialty: 'Gastroenterology' },
-  'indigestion': { disease: 'Gastrointestinal Issue', specialty: 'Gastroenterology' },
-  
-  // Neurological symptoms
-  'headache': { disease: 'Neurological Issue', specialty: 'Neurology' },
-  'migraine': { disease: 'Neurological Issue', specialty: 'Neurology' },
-  'dizziness': { disease: 'Neurological Issue', specialty: 'Neurology' },
-  'seizures': { disease: 'Neurological Issue', specialty: 'Neurology' },
-  'memory loss': { disease: 'Neurological Issue', specialty: 'Neurology' },
-  'confusion': { disease: 'Neurological Issue', specialty: 'Neurology' },
-  'numbness': { disease: 'Neurological Issue', specialty: 'Neurology' },
-  
-  // Dermatological symptoms
-  'rash': { disease: 'Skin Condition', specialty: 'Dermatology' },
-  'itching': { disease: 'Skin Condition', specialty: 'Dermatology' },
-  'skin irritation': { disease: 'Skin Condition', specialty: 'Dermatology' },
-  'acne': { disease: 'Skin Condition', specialty: 'Dermatology' },
-  'eczema': { disease: 'Skin Condition', specialty: 'Dermatology' },
-  
-  // Orthopedic symptoms
-  'joint pain': { disease: 'Joint Problem', specialty: 'Orthopedics' },
-  'back pain': { disease: 'Orthopedic Issue', specialty: 'Orthopedics' },
-  'knee pain': { disease: 'Orthopedic Issue', specialty: 'Orthopedics' },
-  'shoulder pain': { disease: 'Orthopedic Issue', specialty: 'Orthopedics' },
-  'bone fracture': { disease: 'Orthopedic Issue', specialty: 'Orthopedics' },
-  
-  // Rheumatological symptoms
-  'arthritis': { disease: 'Rheumatological Condition', specialty: 'Rheumatology' },
-  'joint stiffness': { disease: 'Rheumatological Condition', specialty: 'Rheumatology' },
-  'swollen joints': { disease: 'Rheumatological Condition', specialty: 'Rheumatology' },
-  
-  // General symptoms
-  'fatigue': { disease: 'General Health Issue', specialty: 'General Medicine' },
-  'weakness': { disease: 'General Health Issue', specialty: 'General Medicine' },
-  'weight loss': { disease: 'General Health Issue', specialty: 'General Medicine' },
-  'weight gain': { disease: 'General Health Issue', specialty: 'General Medicine' }
-};
+// Rule-based (non-ML) symptom-to-specialty matcher.
+//
+// Each condition lists the keyword phrases that suggest it. A phrase's weight is its
+// word count, so multi-word phrases ("shortness of breath") outweigh single generic
+// words ("pain"), and matching is done on whole-word boundaries so e.g. "rash" doesn't
+// match inside "harsh". Confidence is an asymptotic function of matched weight, so it
+// climbs with more/stronger keyword matches but never claims false certainty.
 
-function predictDisease(symptoms) {
-  if (!symptoms || typeof symptoms !== 'string') {
-    return { disease: 'General Health Issue', specialty: 'General Medicine', confidence: 'low' };
+const CONDITIONS = [
+  {
+    disease: 'Possible Cardiac Issue',
+    specialty: 'Cardiology',
+    keywords: ['chest pain', 'chest discomfort', 'heart palpitations', 'shortness of breath', 'chest tightness', 'irregular heartbeat'],
+  },
+  {
+    disease: 'Respiratory Infection',
+    specialty: 'Pulmonology',
+    keywords: ['cough', 'fever', 'sore throat', 'difficulty breathing', 'wheezing', 'chest congestion'],
+  },
+  {
+    disease: 'Common Cold',
+    specialty: 'Pulmonology',
+    keywords: ['runny nose', 'congestion', 'sneezing', 'stuffy nose'],
+  },
+  {
+    disease: 'Asthma-related Issue',
+    specialty: 'Pulmonology',
+    keywords: ['wheezing', 'shortness of breath', 'tight chest when breathing'],
+  },
+  {
+    disease: 'Gastrointestinal Issue',
+    specialty: 'Gastroenterology',
+    keywords: ['stomach pain', 'abdominal pain', 'nausea', 'vomiting', 'diarrhea', 'constipation', 'indigestion', 'heartburn', 'bloating'],
+  },
+  {
+    disease: 'Neurological Issue',
+    specialty: 'Neurology',
+    keywords: ['headache', 'migraine', 'dizziness', 'seizures', 'memory loss', 'confusion', 'numbness', 'tingling sensation'],
+  },
+  {
+    disease: 'Skin Condition',
+    specialty: 'Dermatology',
+    keywords: ['rash', 'itching', 'skin irritation', 'acne', 'eczema', 'hives', 'dry skin'],
+  },
+  {
+    disease: 'Orthopedic Issue',
+    specialty: 'Orthopedics',
+    keywords: ['back pain', 'knee pain', 'shoulder pain', 'bone fracture', 'joint pain', 'muscle strain'],
+  },
+  {
+    disease: 'Rheumatological Condition',
+    specialty: 'Rheumatology',
+    keywords: ['arthritis', 'joint stiffness', 'swollen joints', 'morning stiffness'],
+  },
+  {
+    disease: 'General Health Issue',
+    specialty: 'General Medicine',
+    keywords: ['fatigue', 'weakness', 'weight loss', 'weight gain', 'loss of appetite', 'general malaise'],
+  },
+];
+
+const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const keywordWeight = (keyword) => keyword.trim().split(/\s+/).length;
+
+// score -> confidence% via an asymptotic curve: rewards more/stronger matches with
+// diminishing returns, capped below 100 since this is keyword matching, not a diagnosis.
+const scoreToConfidence = (score) => Math.round((score / (score + 2)) * 100);
+
+/**
+ * @param {string} symptoms free-text symptom description
+ * @returns {{ results: Array<{disease:string, specialty:string, confidence:number, matchedSymptoms:string[]}>, hasMatch: boolean }}
+ */
+function predictConditions(symptoms) {
+  if (!symptoms || typeof symptoms !== 'string' || !symptoms.trim()) {
+    return { results: [], hasMatch: false };
   }
 
-  const symptomsLower = symptoms.toLowerCase();
-  const matches = [];
-  
-  // Check for symptom matches
-  for (const [symptom, prediction] of Object.entries(diseaseMap)) {
-    if (symptomsLower.includes(symptom)) {
-      matches.push(prediction);
+  const text = symptoms.toLowerCase();
+  const scored = [];
+
+  for (const condition of CONDITIONS) {
+    let score = 0;
+    const matchedSymptoms = [];
+
+    for (const keyword of condition.keywords) {
+      const pattern = new RegExp(`\\b${escapeRegex(keyword)}\\b`, 'i');
+      if (pattern.test(text)) {
+        score += keywordWeight(keyword);
+        matchedSymptoms.push(keyword);
+      }
+    }
+
+    if (score > 0) {
+      scored.push({
+        disease: condition.disease,
+        specialty: condition.specialty,
+        score,
+        matchedSymptoms,
+      });
     }
   }
 
-  if (matches.length === 0) {
-    return { disease: 'General Health Issue', specialty: 'General Medicine', confidence: 'low' };
-  }
+  scored.sort((a, b) => b.score - a.score);
 
-  // Count occurrences of each disease and specialty
-  const diseaseCounts = {};
-  const specialtyCounts = {};
-  
-  matches.forEach(match => {
-    diseaseCounts[match.disease] = (diseaseCounts[match.disease] || 0) + 1;
-    specialtyCounts[match.specialty] = (specialtyCounts[match.specialty] || 0) + 1;
-  });
+  const results = scored.slice(0, 3).map(({ disease, specialty, score, matchedSymptoms }) => ({
+    disease,
+    specialty,
+    confidence: scoreToConfidence(score),
+    matchedSymptoms,
+  }));
 
-  // Get most common disease and specialty
-  const predictedDisease = Object.keys(diseaseCounts).reduce((a, b) => 
-    diseaseCounts[a] > diseaseCounts[b] ? a : b
-  );
-  
-  const predictedSpecialty = Object.keys(specialtyCounts).reduce((a, b) => 
-    specialtyCounts[a] > specialtyCounts[b] ? a : b
-  );
-
-  const confidence = matches.length > 2 ? 'high' : matches.length > 1 ? 'medium' : 'low';
-
-  return {
-    disease: predictedDisease,
-    specialty: predictedSpecialty,
-    confidence
-  };
+  return { results, hasMatch: results.length > 0 };
 }
 
-module.exports = { predictDisease };
+const FALLBACK = { disease: 'General Health Issue', specialty: 'General Medicine', confidence: 0, matchedSymptoms: [] };
 
+module.exports = { predictConditions, FALLBACK, CONDITIONS };

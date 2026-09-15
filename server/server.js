@@ -14,6 +14,7 @@ const authorize = require('./middleware/authorize');
 const authRoutes = require('./routes/auth');
 const doctorRoutes = require('./routes/doctors');
 const adminRoutes = require('./routes/admin');
+const predictRoutes = require('./routes/predict');
 
 const app = express();
 
@@ -41,8 +42,9 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/doctors', doctorRoutes);
 app.use('/api/admin', authenticate, authorize('admin'), adminRoutes);
+app.use('/api/predict', predictRoutes);
 
-// Remaining feature routes are mounted here phase by phase (appointments, predict).
+// Remaining feature routes are mounted here phase by phase (appointments).
 
 const clientDist = path.join(__dirname, '../client/dist');
 if (NODE_ENV === 'production') {
