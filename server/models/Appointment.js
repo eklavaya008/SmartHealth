@@ -36,7 +36,14 @@ const appointmentSchema = new mongoose.Schema(
 // A doctor can only have one non-cancelled appointment per date+startTime.
 appointmentSchema.index(
   { doctorId: 1, date: 1, startTime: 1 },
-  { unique: true, partialFilterExpression: { status: { $ne: 'cancelled' } } }
-);
+  {
+    unique: true,
+    partialFilterExpression: {
+      status: {
+        $in: ['pending', 'confirmed', 'completed']
+      }
+    }
+  }
+);  
 
 module.exports = mongoose.model('Appointment', appointmentSchema);
